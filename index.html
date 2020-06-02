@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="description" content="App Design and CSS - Layout Partial Page CSS Grid">
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Raleigh Birds Eye</title>
+    <link rel="stylesheet" href="./style.css">
+
+    <script src="https://unpkg.com/terraformer@1.0.7/terraformer.js"></script>
+    <script src="https://unpkg.com/terraformer-arcgis-parser@1.0.5/terraformer-arcgis-parser.js"></script>
+    <script src='https://unpkg.com/@turf/turf/turf.min.js'></script>
+    <script type='text/javascript'
+        src='https://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=AgDdBCDX3zgiQ8jkdlmLyQZupfKUvGzBCVou1o8rFr8EnpXPXux_17uMc5gwbnW8'
+        async defer></script>
+    <script src="./app.js" defer></script>
+
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="box header" id="titleDiv">Raleigh Birds Eye View</div>
+        <div class="box sidebar">
+            <div id="searchBoxContainer">
+                <fieldset>
+                    <legend>Search</legend>
+                    <p class="instructions">You can manually navigate through the map or search for specific locations
+                        with any of the below prompts.</p>
+                    <div class="searchContainer">
+                        <label for="searchBox">Address</label>
+                        <input type="text" id="searchBox"><br>
+                        <input type="checkbox" id="addressSearchMarkerToggle" checked>
+                        <label for="addressSearchMarkerToggle" class="searchLayerVisibilityText">Marker
+                            Visibility</label>
+                    </div>
+                    <div class="searchContainer">
+                        <label for="parcelSearchBox">Wake County Parcel PIN</label>
+                        <input type="text" id="parcelSearchBox">
+                        <button id="parcelSearchButton">Search</button><br>
+                        <input type="checkbox" id="parcelSearchMarkerToggle" checked>
+                        <label for="parcelSearchMarkerToggle" class="searchLayerVisibilityText">Parcel
+                            Visibility</label>
+                    </div>
+
+                    <div id="clearSearchButtonContainer">
+                        <button id="clearSearchButton">Clear Search</button>
+                    </div>
+                </fieldset>
+            </div>
+            <div id="layerListContainer">
+                <fieldset>
+                    <legend>Layers</legend>
+                    <div>
+                        <input type="checkbox" id="greenwaysCheckBox" name="mapLayers" value="greenways" checked>
+                        <label for="greenwaysCheckBox">Raleigh Greenway Trails</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="parksCheckBox" name="mapLayers" value="parks" checked>
+                        <label for="parksCheckBox">Raleigh Parks</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="greenwayPropertiesCheckBox" name="mapLayers"
+                            value="greenwayProperties">
+                        <label for="greenwayPropertiesCheckBox">Raleigh Greenway Properties</label>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+        <div class="map" id="mapView"></div>
+    </div>
+</body>
+
+</html>
