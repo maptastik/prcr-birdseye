@@ -16,8 +16,21 @@ html, body {
 
   .header {
     grid-area: header;
+    display: grid;
+    grid-template-columns: 64px auto;
+    grid-template-rows: 100%;
     background-color: var(--main-bg-color);
-    color: var(--main-text-color)
+    color: var(--main-text-color);
+    grid-template-areas: "logo title"
+  }
+  #logo {
+    height: 100%;
+    grid-area: logo;
+  }
+  #titleText {
+    font-size: 1.4rem;
+    margin: 0;
+    grid-area: title;
   }
 
   .sidebar {
