@@ -1,18 +1,20 @@
 // GLOBALS
 //// VARIABLES
 const addressSearchBoxEl = document.getElementById("searchBox");
+const addressSearchButtonEl = document.getElementById("addressSearchButton");
 const addressSearchMarkerToggleEl = document.getElementById("addressSearchMarkerToggle");
+const addressQueryBaseUrl = 'https://maps.raleighnc.gov/arcgis/rest/services/Locators/RaleighAddresses/GeocodeServer/findAddressCandidates?outFields=*&outSR=4326&f=json&Single+Line+Input=';
 const parcelSearchBoxEl = document.getElementById("parcelSearchBox");
 const parcelSearchButtonEl = document.getElementById("parcelSearchButton")
 const parcelQueryBaseUrl = 'https://maps.wakegov.com/arcgis/rest/services/Property/Parcels/MapServer/0/query?f=json&outSR=4326&outFields=PIN_NUM&where=PIN_NUM='
 const parcelSearchMarkerToggleEl = document.getElementById("parcelSearchMarkerToggle");
 const parksCheckBox = document.getElementById('parksCheckBox');
 const clearSearchButtonEl = document.getElementById("clearSearchButton");
-const parksURL = 'https://opendata.arcgis.com/datasets/43b5d6bf9d6e400599498d052545d331_0.geojson'
-const greenwaysCheckBox = document.getElementById('greenwaysCheckBox')
-const greenwaysURL = 'https://opendata.arcgis.com/datasets/23836bb9145943d485252d9665020ff1_0.geojson'
-const greenwayPropertiesCheckBoxEl = document.getElementById('greenwayPropertiesCheckBox')
-const greenwayPropertiesURL = 'https://maps.raleighnc.gov/arcgis/rest/services/Parks/Greenway/MapServer/3/query?f=json&where=1=1&outSR=4326&geometryPrecision=7'
+const parksURL = 'https://opendata.arcgis.com/datasets/43b5d6bf9d6e400599498d052545d331_0.geojson';
+const greenwaysCheckBox = document.getElementById('greenwaysCheckBox');
+const greenwaysURL = 'https://opendata.arcgis.com/datasets/23836bb9145943d485252d9665020ff1_0.geojson';
+const greenwayPropertiesCheckBoxEl = document.getElementById('greenwayPropertiesCheckBox');
+const greenwayPropertiesURL = 'https://maps.raleighnc.gov/arcgis/rest/services/Parks/Greenway/MapServer/3/query?f=json&where=1=1&outSR=4326&geometryPrecision=7';
 
 //// FUNCTIONS
 ////// UI
@@ -54,24 +56,36 @@ function GetMap() {
     greenwayPropertiesLayer.setVisible(false);
 
     // Search by address
-    Microsoft.Maps.loadModule('Microsoft.Maps.AutoSuggest', function () {
-        var options = {
-            maxResults: 4,
-            map: map
-        };
-        let manager = new Microsoft.Maps.AutosuggestManager(options);
-        manager.attachAutosuggest('#searchBox', '#searchBoxContainer', selectedSuggestion);
-    });
+    addressSearchButtonEl.addEventListener('click', () => {
+        let addressQueryURL = `${addressQueryBaseUrl}${addressSearchBoxEl.value}`
+        fetch(addressQueryURL)
+            .then(result => result.json())
+            .then(data => {
+                console.log(data)
+                let candidates = data.candidates;
+                if (candidates.length > 0) {
+                    let topCandidateLocation = candidates[0].location;
+                    selectedSuggestion(topCandidateLocation.x, topCandidateLocation.y)
+                } else {
+                    alert("No results returned. Check to make sure you have spelled everything correctly. You may need to simplify.")
+                }
+            })
+    })
 
-    function selectedSuggestion(suggestionResult) {
+    function selectedSuggestion(x, y) {
         pushpinLayer.clear()
         parcelPINLayer.clear()
         pushpinLayer.setVisible(true)
-        map.setView({
-            bounds: suggestionResult.bestView
-        });
-        let pushpin = new Microsoft.Maps.Pushpin(suggestionResult.location);
+        let pushpinLocation = new Microsoft.Maps.Location(y, x);
+        let pushpin = new Microsoft.Maps.Pushpin(pushpinLocation);
         pushpinLayer.add(pushpin)
+        let rect = new Microsoft.Maps.LocationRect.fromLocations([pushpinLocation])
+        rect.height = 0.005;
+        rect.width = 0.005;
+        console.log(rect)
+        map.setView({
+            bounds: rect
+        })
     }
 
     // Toggles marker for searched address
@@ -81,10 +95,10 @@ function GetMap() {
 
     // Search by parcel PIN
     parcelSearchButtonEl.addEventListener('click', () => {
-        let queryURL = `${parcelQueryBaseUrl}${parcelSearchBoxEl.value}`
+        let parcelQueryURL = `${parcelQueryBaseUrl}${parcelSearchBoxEl.value}`
         parcelPINLayer.clear()
         pushpinLayer.clear()
-        fetch(queryURL)
+        fetch(parcelQueryURL)
             .then(response => response.json())
             .then(data => {
                 if (data.features.length > 0) {
@@ -125,7 +139,10 @@ function GetMap() {
         parcelPINLayer.clear();
         pushpinLayer.clear();
         parcelSearchBoxEl.value = '';
+        parcelSearchMarkerToggleEl.checked = true;
         addressSearchBoxEl.value = '';
+        addressSearchMarkerToggleEl.checked = true;
+
     })
 
     // Load Parks
