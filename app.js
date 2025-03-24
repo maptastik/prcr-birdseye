@@ -3,7 +3,7 @@
 const addressSearchBoxEl = document.getElementById("searchBox");
 const addressSearchButtonEl = document.getElementById("addressSearchButton");
 const addressSearchMarkerToggleEl = document.getElementById("addressSearchMarkerToggle");
-const addressQueryBaseUrl = 'https://maps.raleighnc.gov/arcgis/rest/services/Locators/RaleighAddresses/GeocodeServer/findAddressCandidates?outFields=*&outSR=4326&f=json&Single+Line+Input=';
+const addressQueryBaseUrl = 'https://maps.raleighnc.gov/arcgis/rest/services/Locators/CompositeLocator/GeocodeServer/findAddressCandidates?outFields=*&outSR=4326&f=json&SingleLine=';
 const parcelSearchBoxEl = document.getElementById("parcelSearchBox");
 const parcelSearchButtonEl = document.getElementById("parcelSearchButton")
 const parcelQueryBaseUrl = 'https://maps.wakegov.com/arcgis/rest/services/Property/Parcels/MapServer/0/query?f=json&outSR=4326&outFields=PIN_NUM&where=PIN_NUM='
@@ -14,7 +14,7 @@ const parksURL = 'https://opendata.arcgis.com/datasets/43b5d6bf9d6e400599498d052
 const greenwaysCheckBox = document.getElementById('greenwaysCheckBox');
 const greenwaysURL = 'https://opendata.arcgis.com/datasets/23836bb9145943d485252d9665020ff1_0.geojson';
 const greenwayPropertiesCheckBoxEl = document.getElementById('greenwayPropertiesCheckBox');
-const greenwayPropertiesURL = 'https://maps.raleighnc.gov/arcgis/rest/services/Parks/Greenway/MapServer/3/query?f=json&where=1=1&outSR=4326&geometryPrecision=7';
+const greenwayPropertiesURL = 'https://services.arcgis.com/v400IkDOw1ad7Yad/ArcGIS/rest/services/GreenwayProperty/FeatureServer/0/query?f=json&where=1=1&outSR=4326&geometryPrecision=7';
 
 //// FUNCTIONS
 ////// UI
